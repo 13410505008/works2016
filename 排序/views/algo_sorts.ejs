@@ -1,0 +1,136 @@
+<!--Created by Administrator on 2016/9/13.-->
+<% include ./include/layout.ejs%>
+<body class="bg">
+<div class="container">
+    <h1><%= title %></h1>
+    <form  method="POST" action="/sorts">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion"
+                       href="#collapseOne">
+                        自定义测试数据
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label>测试算法：</label><br/>
+                        <label class="checkbox-inline">
+                            <input name="algo" type="checkbox" value="0" checked/>选择排序&nbsp&nbsp
+                        </label>
+                        <label class="checkbox-inline">
+                            <input name="algo" type="checkbox" value="1" />冒泡排序&nbsp&nbsp
+                        </label>
+                        <label class="checkbox-inline">
+                            <input name="algo" type="checkbox" value="2" />插入排序&nbsp&nbsp
+                        </label>
+                        <label class="checkbox-inline">
+                            <input name="algo" type="checkbox" value="3" />合并排序&nbsp&nbsp
+                        </label>
+                        <label class="checkbox-inline">
+                            <input name="algo" type="checkbox" value="4" />快速排序&nbsp&nbsp
+                        </label>
+                    </div>
+                    <div class="input-group col-sm-2 pull-left">
+                        <input type="text" class="form-control" id="count" name="count" placeholder="输入测试组数">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">确定</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="pull-left">
+        <% if(count==0){%>
+        <span>当前数据为文本保存数据</span>
+        <% }else {%>
+        <span>自定义测试组数：<strong><%= count %></strong></span>
+        <% }%>
+    </div>
+    <table class="table table-hover table-bordered">
+        <tr>
+            <td>规模(次数)</td>
+            <td>10</td>
+            <td>100</td>
+            <td>1000</td>
+            <td>10000</td>
+            <td>100000</td>
+        </tr>
+        <% for(var i=0;i<eval(results).length;i++) { %>
+            <tr>
+                <td><strong><%= eval(results)[i].name %></strong>（ms）</td>
+                <td><%= eval(results)[i].data[0] %></td>
+                <td><%= eval(results)[i].data[1] %></td>
+                <td><%= eval(results)[i].data[2] %></td>
+                <td><%= eval(results)[i].data[3] %></td>
+                <td><%= eval(results)[i].data[4] %></td>
+            </tr>
+        <% } %>
+    </table>
+
+</div>
+<div id="container" style="width: 960px; height: 600px; margin: 0 auto"></div>
+<script language="JavaScript">
+    $(document).ready(function() {
+        var chart= {
+                    defaultSeriesType: 'spline', //图表类型为曲线图
+                    zoomType:"xy"
+        };
+        var title = {
+            text: '排序算法性能分析'
+        };
+        var subtitle = {
+            text: '排序算法时间效率'
+        };
+        var xAxis = {
+            title: {
+                text: ' 执行规模(次数)'
+            },
+            categories: ['10', '100', '1000', '10000', '100000']
+        };
+        var yAxis = {
+            title: {
+                text: ' 平均时间(ms)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 2,
+                color: '#808080'
+            }]
+        };
+        //数据点提示框
+        var tooltip = {
+            valueSuffix: '(ms)'
+        }
+        //图例选项
+        var legend = {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        };
+        var json = {};
+        var results = '<%- results %>';
+        console.log("1"+results);
+        results = JSON.parse(results);
+        console.log("2"+JSON.stringify(results));
+
+        json.chart = chart;
+        json.title = title;
+        json.subtitle = subtitle;
+        json.xAxis = xAxis;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.legend = legend;
+        json.series = results
+
+        $('#container').highcharts(json);
+    });
+</script>
+
+</body>
+</html>
+
